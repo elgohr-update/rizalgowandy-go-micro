@@ -14,7 +14,7 @@ type authClaims struct {
 	Type     string            `json:"type"`
 	Scopes   []string          `json:"scopes"`
 	Metadata map[string]string `json:"metadata"`
-	Name     string            `json:"name"`
+	Alias    string            `json:"alias"`
 
 	jwt.StandardClaims
 }
@@ -49,7 +49,7 @@ func (j *JWT) Generate(acc *auth.Account, opts ...token.GenerateOption) (*token.
 	options := token.NewGenerateOptions(opts...)
 
 	// backwards compatibility
-	name := acc.Name
+	name := acc.Alias
 	if name == "" {
 		name = acc.ID
 	}
@@ -57,7 +57,7 @@ func (j *JWT) Generate(acc *auth.Account, opts ...token.GenerateOption) (*token.
 	// generate the JWT
 	expiry := time.Now().Add(options.Expiry)
 	t := jwt.NewWithClaims(jwt.SigningMethodRS256, authClaims{
-		Type: acc.Type, Scopes: acc.Scopes, Metadata: acc.Metadata, Name: name,
+		Type: acc.Type, Scopes: acc.Scopes, Metadata: acc.Metadata, Alias: name,
 		StandardClaims: jwt.StandardClaims{
 			Subject:   acc.ID,
 			Issuer:    acc.Issuer,
@@ -103,7 +103,7 @@ func (j *JWT) Inspect(t string) (*auth.Account, error) {
 	}
 
 	// backwards compatibility
-	name := claims.Name
+	name := claims.Alias
 	if name == "" {
 		name = claims.Subject
 	}
@@ -115,7 +115,7 @@ func (j *JWT) Inspect(t string) (*auth.Account, error) {
 		Type:     claims.Type,
 		Scopes:   claims.Scopes,
 		Metadata: claims.Metadata,
-		Name:     name,
+		Alias:    name,
 	}, nil
 }
 

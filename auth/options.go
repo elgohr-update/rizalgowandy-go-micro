@@ -110,8 +110,8 @@ type GenerateOptions struct {
 	Secret string
 	// Issuer of the account, e.g. micro
 	Issuer string
-	// Name of the acouunt e.g. an email or username
-	Name string
+	// Alias of the acouunt e.g. an email or username
+	Alias string
 }
 
 type GenerateOption func(o *GenerateOptions)
@@ -158,10 +158,10 @@ func WithIssuer(i string) GenerateOption {
 	}
 }
 
-// WithName for the generated account
-func WithName(n string) GenerateOption {
+// WithAlias for the generated account
+func WithAlias(n string) GenerateOption {
 	return func(o *GenerateOptions) {
-		o.Name = n
+		o.Alias = n
 	}
 }
 
